@@ -58,20 +58,20 @@ class HTTP_Upload_Error extends PEAR
      * Selected language for error messages
      * @var string
      */
-    var $lang = 'en';
+    public $lang = 'en';
 
     /**
      * Whether HTML entities shall be encoded automatically
      * @var boolean
      */
-    var $html = false;
+    public $html = false;
 
     /**
      * PHP4 Constructor
      * 
      * @see __construct()
      */
-    function HTTP_Upload_Error($lang = null, $html = false)
+    public function HTTP_Upload_Error($lang = null, $html = false)
     {
         $this->__construct($lang, $html);
     }
@@ -84,7 +84,7 @@ class HTTP_Upload_Error extends PEAR
      * @param string $lang The language selected for error code messages
      * @access public
      */
-    function __construct($lang = null, $html = false)
+    public function __construct($lang = null, $html = false)
     {
         $this->lang = ($lang !== null) ? $lang : $this->lang;
         $this->html = ($html !== false) ? $html : $this->html;
@@ -121,7 +121,7 @@ class HTTP_Upload_Error extends PEAR
      * @param    string $e_code  type of error
      * @return   string          Error message
      */
-    function errorCode($e_code)
+    public function errorCode($e_code)
     {
         if (!empty($this->error_codes[$this->lang][$e_code])) {
             $msg = $this->html ?
@@ -141,12 +141,17 @@ class HTTP_Upload_Error extends PEAR
 
     /**
      * Overwrites the PEAR::raiseError method
+     * 
+     * @todo This method doesn't properly overwrite the PEAR::raiseError
+     * method.  This method creates a runtime notice -- "Declaration of 
+     * HTTP_Upload_Error::raiseError() should be compatible with that of
+     * PEAR::raiseError()"
      *
      * @param    string $e_code      type of error
      * @return   object PEAR_Error   a PEAR-Error object
      * @access   public
      */
-    function raiseError($e_code)
+    public function raiseError($e_code)
     {
         return PEAR::raiseError($this->errorCode($e_code), $e_code);
     }
@@ -159,7 +164,7 @@ class HTTP_Upload_Error extends PEAR
      *
      * @return mixed PEAR_Error on error, boolean true if all went well
      */
-    function _loadLanguage($lang)
+    public function _loadLanguage($lang)
     {
         //prepare some variables
         $maxsize = $this->_maxsize;
@@ -205,21 +210,21 @@ class HTTP_Upload extends HTTP_Upload_Error
      * Contains an array of "uploaded files" objects
      * @var array
      */
-    var $files = array();
+    public $files = array();
     
     /**
      * Whether the files array has already been built or not
      * @var int
      * @access private
      */
-    var $is_built = false;
+    private $is_built = false;
 
     /**
      * Contains the desired chmod for uploaded files
      * @var int
      * @access private
      */
-    var $_chmod = HTTP_UPLOAD_DEFAULT_CHMOD;
+    private $_chmod = HTTP_UPLOAD_DEFAULT_CHMOD;
 
     /**
      * Specially used if the naming mode is 'seq'
@@ -228,7 +233,7 @@ class HTTP_Upload extends HTTP_Upload_Error
      * @var array
      * @access private
      */
-    var $_modeNameSeq = array(
+    private $_modeNameSeq = array(
         'flag' => false,
         'prepend' => '',
         'append' => '',
@@ -239,7 +244,7 @@ class HTTP_Upload extends HTTP_Upload_Error
      *
      * @see __constructor
      */
-    function HTTP_Upload($lang = null)
+    public function HTTP_Upload($lang = null)
     {
         $this->__construct($lang);
     }
@@ -251,7 +256,7 @@ class HTTP_Upload extends HTTP_Upload_Error
      * @see Upload_Error::error_codes
      * @access public
      */
-    function __construct$lang = null)
+    public function __construct($lang = null)
     {
         $this->HTTP_Upload_Error($lang);
         if (function_exists('version_compare') &&
@@ -284,7 +289,7 @@ class HTTP_Upload extends HTTP_Upload_Error
      * @return mixed array or object (see @param $file above) or Pear_Error
      * @access public
      */
-    function &getFiles($file = null)
+    public function &getFiles($file = null)
     {
         //build only once for multiple calls
         if (!$this->is_built) {
@@ -336,7 +341,7 @@ class HTTP_Upload extends HTTP_Upload_Error
      *
      * @return array of HTTP_Upload_File objects for every file
      */
-    function &_buildFiles()
+    public function &_buildFiles()
     {
         // Form method check
         if (!isset($this->content_type) ||
@@ -415,7 +420,7 @@ class HTTP_Upload extends HTTP_Upload_Error
      * @access public
      * @see Read the note in the source code about this function
      */
-    function isMissing()
+    public function isMissing()
     {
         if (count($this->post_files) < 1) {
             $error =& $this->raiseError('NO_USER_FILE');
@@ -448,7 +453,7 @@ class HTTP_Upload extends HTTP_Upload_Error
      *
      * @param int Desired mode 
      */
-    function setChmod($mode)
+    public function setChmod($mode)
     {
         $this->_chmod = $mode;
     }
@@ -469,13 +474,13 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * Assoc array with file properties
      * @var array
      */
-    var $upload = array();
+    public $upload = array();
 
     /**
      * If user haven't selected a mode, by default 'safe' will be used
      * @var boolean
      */
-    var $mode_name_selected = false;
+    public $mode_name_selected = false;
 
     /**
      * It's a common security risk in pages who has the upload dir
@@ -485,14 +490,14 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @access private
      * @see HTTP_Upload_File::setValidExtensions()
      */
-    var $_extensionsCheck = array('php', 'phtm', 'phtml', 'php3', 'inc');
+    private $_extensionsCheck = array('php', 'phtm', 'phtml', 'php3', 'inc');
 
     /**
      * @see HTTP_Upload_File::setValidExtensions()
      * @var string
      * @access private
      */
-    var $_extensionsMode  = 'deny';
+    private $_extensionsMode  = 'deny';
 
     /**
      * Whether to use case-sensitive extension checks or not
@@ -500,25 +505,26 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @var bool
      * @access private
      */
-     var $_extensionsCaseSensitive = true;
+     private $_extensionsCaseSensitive = true;
 
     /**
      * Contains the desired chmod for uploaded files
      * @var int
      * @access private
      */
-    var $_chmod = HTTP_UPLOAD_DEFAULT_CHMOD;
+    private $_chmod = HTTP_UPLOAD_DEFAULT_CHMOD;
 
     /**
      * PHP4 Constructor
      *
      * @see __construct
      */
-    function HTTP_Upload_File($name = null, $tmp = null,  $formname = null,
-                              $type = null, $size = null, $error = null, 
-                              $lang = null, $chmod = HTTP_UPLOAD_DEFAULT_CHMOD)
+    public function HTTP_Upload_File($name = null, $tmp = null,  
+                              $formname = null, $type = null, $size = null, 
+                              $error = null, $lang = null, 
+                              $chmod = HTTP_UPLOAD_DEFAULT_CHMOD)
     {
-        $this->__construct($name, $tmp, $formname, $type, $size, $error, $lang $chmod);
+        $this->__construct($name, $tmp, $formname, $type, $size, $error, $lang, $chmod);
     }
 
     /**
@@ -533,7 +539,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @param   string  $lang       used language for errormessages
      * @access  public
      */
-    function __construct($name = null, $tmp = null,  $formname = null,
+    public function __construct($name = null, $tmp = null,  $formname = null,
                               $type = null, $size = null, $error = null, 
                               $lang = null, $chmod = HTTP_UPLOAD_DEFAULT_CHMOD)
     {
@@ -591,7 +597,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @return string The modified name of the destination file
      * @access public
      */
-    function setName($mode, $prepend = null, $append = null)
+    public function setName($mode, $prepend = null, $append = null)
     {
         switch ($mode) {
             case 'uniq':
@@ -628,7 +634,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      *
      * @param string $dir  Destination directory
      */
-    function nameToSeq($dir)
+    public function nameToSeq($dir)
     {
         //Check if a file with the same name already exists
         $name = $dir . DIRECTORY_SEPARATOR . $this->upload['real'];
@@ -665,9 +671,10 @@ class HTTP_Upload_File extends HTTP_Upload_Error
 
     /**
      * Unique file names in the form: 9022210413b75410c28bef.html
+     * @return string A unique file string
      * @see HTTP_Upload_File::setName()
      */
-    function nameToUniq()
+    public function nameToUniq()
     {
         $uniq = uniqid(rand());
         return $uniq;
@@ -681,9 +688,9 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @return   string Formatted file name
      * @see HTTP_Upload_File::setName()
      */
-    function nameToSafe($name, $maxlen=250)
+    public function nameToSafe($name, $maxlen=250)
     {
-        $noalpha = 'ÁÉÍÓÚÝáéíóúýÂÊÎÔÛâêîôûÀÈÌÒÙàèìòùÄËÏÖÜäëïöüÿÃãÕõÅåÑñÇç@°ºªÞþÆæ';
+        $noalpha = 'ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½';
         $alpha   = 'AEIOUYaeiouyAEIOUaeiouAEIOUaeiouAEIOUaeiouyAaOoAaNnCcaooaTtAa';
 
         $name = substr($name, 0, $maxlen);
@@ -723,11 +730,17 @@ class HTTP_Upload_File extends HTTP_Upload_Error
     /**
      * Some error occured during upload (most common due a file size problem,
      * like max size exceeded or 0 bytes long).
+     * 
+     * @todo This method doesn't properly overwrite the PEAR::isError
+     * method.  This method creates a runtime notice -- "Declaration of 
+     * HTTP_Upload_File::isError() should be compatible with that of 
+     * PEAR::isError()"
+     * 
      * @return bool If there were errors submitting the file (probably
      *              because the file excess the max permitted file size)
      * @access public
      */
-    function isError()
+    public function isError()
     {
         if (in_array($this->upload['error'], array('TOO_LARGE', 'BAD_FORM','DEV_NO_DEF_FILE'))) {
             return true;
@@ -743,7 +756,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @return mixed   True on success or PEAR_Error object on error
      * @access public
      */
-    function moveTo($dir, $overwrite = true)
+    public function moveTo($dir, $overwrite = true)
     {
         if (!$this->isValid()) {
             $error =& $this->raiseError($this->upload['error']);
@@ -798,8 +811,10 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      *
      * @param    string  $dir_dest Destination dir
      * @return   mixed   False on no errors or error code on error
+     * 
+     * @access private
      */
-    function _chkDirDest($dir_dest)
+    private function _chkDirDest($dir_dest)
     {
         if (!$dir_dest) {
             return 'MISSING_DIR';
@@ -820,7 +835,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @see HTTP_Upload_File::HTTP_Upload_File()
      * @access public
      */
-    function getProp($name = null)
+    public function getProp($name = null)
     {
         if ($name === null) {
             return $this->upload;
@@ -834,7 +849,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @return string    a Error message
      * @access public
      */
-    function errorMsg()
+    public function errorMsg()
     {
         return $this->errorCode($this->upload['error']);
     }
@@ -844,7 +859,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @return string    a Error message
      * @access public
      */
-    function getMessage()
+    public function getMessage()
     {
         return $this->errorCode($this->upload['error']);
     }
@@ -856,7 +871,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      *
      * @access public
      */
-    function getValidExtensions()
+    public function getValidExtensions()
     {
         return $this->_extensionsCheck;
     }
@@ -877,7 +892,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      *                             of valid extensions.
      * @access public
      */
-    function setValidExtensions($exts, $mode = 'deny', $case_sensitive = null)
+    public function setValidExtensions($exts, $mode = 'deny', $case_sensitive = null)
     {
         $this->_extensionsCheck = $exts;
         $this->_extensionsMode  = $mode;
@@ -894,7 +909,7 @@ class HTTP_Upload_File extends HTTP_Upload_Error
      * @return bool False on non valid extension, true if they are valid
      * @access private
      */
-    function _evalValidExtensions()
+    private function _evalValidExtensions()
     {
         $exts = $this->_extensionsCheck;
         settype($exts, 'array');

@@ -1,0 +1,15 @@
+# IDE
+#####################
+nbproject
+
+# Logs
+######################
+run-tests.log
+
+# Test Generated Files
+#######################
+tests/*.diff
+tests/*.exp
+tests/*.log
+tests/*.out
+tests/*.php
